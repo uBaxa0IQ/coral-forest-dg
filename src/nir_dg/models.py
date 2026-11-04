@@ -40,13 +40,13 @@ class Adapter:
     def fit(self, X, y, environments):
         name, task, seed, p = self.name, self.task, self.seed, self.params
         if name in {"rf", "meta_matched_rf"}:
-            n = 3 * (len(np.unique(environments)) - 1) * 4 if name == "meta_matched_rf" else 12
+            n = 3 * (len(np.unique(environments)) - 1) * 4 if name == "meta_matched_rf" else p.get("n_estimators", 12)
             cls = RandomForestClassifier if task == "classification" else RandomForestRegressor
             self.model = cls(n_estimators=n, max_depth=p.get("max_depth", 4), min_samples_leaf=12, random_state=seed, n_jobs=1)
             self.model.fit(X, y)
         elif name == "hist_gbdt":
             cls = HistGradientBoostingClassifier if task == "classification" else HistGradientBoostingRegressor
-            self.model = cls(max_iter=30, max_leaf_nodes=8, min_samples_leaf=12, early_stopping=False, random_state=seed, learning_rate=p.get("learning_rate", .1))
+            self.model = cls(max_iter=p.get("rounds", 30), max_leaf_nodes=8, min_samples_leaf=12, early_stopping=False, random_state=seed, learning_rate=p.get("learning_rate", .1))
             self.model.fit(X, y)
         elif name in {"irf", "irf_paired", "crf", "crf_paired"}:
             self.model = DomainForest(task=task, mechanism="crf" if name.startswith("crf") else "irf", penalty=p.get("penalty", 1.) if name == "irf" else 0., lambda1=p.get("lambda1", 1.) if name == "crf" else 0., lambda2=p.get("lambda2", 1.) if name == "crf" else 0., random_state=seed)
@@ -62,13 +62,14 @@ class Adapter:
                 raise ValueError("Era classifier API not verified")
             from erasplit.ensemble import EraHistGradientBoostingRegressor
             weights = {"era": (1, 0, 0), "directional_era": (0, 1, 0), "era_paired": (0, 0, 1)}[name]
-            self.model = EraHistGradientBoostingRegressor(gamma=weights[0], blama=weights[1], vanna=weights[2], max_iter=30, max_leaf_nodes=8, max_bins=16, min_samples_leaf=12, early_stopping=False, random_state=seed, n_jobs=1, learning_rate=.1, **p)
+            era_params = {k: v for k, v in p.items() if k != "rounds"}
+            self.model = EraHistGradientBoostingRegressor(gamma=weights[0], blama=weights[1], vanna=weights[2], max_iter=p.get("rounds", 30), max_leaf_nodes=8, max_bins=16, min_samples_leaf=12, early_stopping=False, random_state=seed, n_jobs=1, learning_rate=.1, **era_params)
             _, env = np.unique(environments, return_inverse=True)
             self.model.fit(X, y, env.astype(np.int32))
         elif name in {"anchor", "anchor_paired"}:
             from anchorboosting import AnchorBooster
             gamma = p.get("gamma", 4.) if name == "anchor" else 1.
-            self.model = AnchorBooster(gamma=gamma, num_boost_round=30, objective="binary" if task == "classification" else "regression", alpha_cvar=1., learning_rate=.1, num_leaves=8, min_data_in_leaf=12, min_gain_to_split=1e-8, verbosity=-1, num_threads=1, seed=seed, deterministic=True, force_col_wise=True)
+            self.model = AnchorBooster(gamma=gamma, num_boost_round=p.get("rounds", 30), objective="binary" if task == "classification" else "regression", alpha_cvar=1., learning_rate=.1, num_leaves=8, min_data_in_leaf=12, min_gain_to_split=1e-8, verbosity=-1, num_threads=1, seed=seed, deterministic=True, force_col_wise=True)
             _, env = np.unique(environments, return_inverse=True)
             anchors = np.eye(env.max() + 1)[env]
             self.model.fit(X, y, Z=anchors)

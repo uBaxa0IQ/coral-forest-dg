@@ -5,6 +5,7 @@ import importlib.metadata
 import json
 from pathlib import Path
 import platform
+import subprocess
 from time import perf_counter
 import traceback
 
@@ -38,7 +39,8 @@ def system_info():
             packages[name] = importlib.metadata.version(name)
         except importlib.metadata.PackageNotFoundError:
             packages[name] = None
-    return dict(platform=platform.platform(), python=platform.python_version(), logical_cpu_count=psutil.cpu_count(), ram_bytes=psutil.virtual_memory().total, packages=packages)
+    commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True, check=False).stdout.strip()
+    return dict(platform=platform.platform(), python=platform.python_version(), logical_cpu_count=psutil.cpu_count(), ram_bytes=psutil.virtual_memory().total, packages=packages, git_commit=commit)
 
 
 def run_source_cv(config_path, run_dir, datasets=None):
