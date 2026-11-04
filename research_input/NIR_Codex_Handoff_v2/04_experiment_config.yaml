@@ -1,0 +1,226 @@
+# RESEARCH DESIGN DRAFT v2.0 — AUTONOMOUS IMPLEMENTATION — NOT FROZEN
+# Все source/target domains выбираются до открытия target-строк.
+project:
+  name: nir-dg-tree-ensembles
+  snapshot_date: '2026-11-04'
+  phase: autonomous_P0_to_P4_full_study
+  scope: [rf_classification, rf_regression, gbdt_classification, gbdt_regression]
+  target_inaccessible_until_phase: P3_final_evaluation
+  preregistration_status: draft_auto_freeze_required_before_target
+  master_seed: 20261104
+  independence: source_only
+  codex_scope: complete_implementation_experiments_and_reporting
+  do_not_stop_after: [P0, P1]
+  autonomous_P2_freeze: true
+  ask_user_only_for_external_blockers: true
+  verify_primary_papers_and_code: true
+  full_core_method_attempt_required: true
+
+safety:
+  forbid_target_train: true
+  forbid_target_preprocessing_fit: true
+  forbid_target_model_selection: true
+  forbid_target_early_stopping: true
+  forbid_target_feature_inspection_before_freeze: true
+  forbid_target_label_inspection_before_freeze: true
+  forbid_target_based_dataset_selection: true
+  forbid_random_row_folds_as_domain_ids: true
+  exclude_environment_id_from_features_by_default: true
+  require_frozen_protocol_hash_before_target_eval: true
+  guard_source_entity_overlaps: true
+  prohibit_target_based_method_or_dataset_selection: true
+  no_silent_changes_to_original_methods: true
+  no_fabricated_metrics_or_replication: true
+  record_all_decisions_before_target_unlock: true
+
+datasets:
+  C_ACS:
+    role: primary_classification
+    task: binary_classification
+    loader: folktables_ACSIncome
+    survey_year: '2018'
+    horizon: '1-Year'
+    survey: person
+    domain_variable: state
+    source_states: [CA, TX, NY, FL, IL, WA, GA, AZ]  # draft; Codex may revise for source-only documented reasons
+    target_states: [CO, NC, MA]  # proposed before target inspection, may change ONLY with logged source-based reason before P2
+    stage: proposed_split_not_downloaded
+    use_domain_id_as_feature: false
+    target_locked: true
+    min_source_domains: 3
+    notes: 'Предложенный исследовательский state split, не официальный.'
+  C_READM:
+    role: primary_classification_conditional
+    task: binary_classification
+    loader: tableshift_diabetes_readmission
+    domain_variable: admission_source
+    target_domain: emergency_room
+    source_domains: all_other_admission_sources
+    stage: source_groups_and_duplicate_patients_not_audited
+    exclude_features: [admission_source]
+    target_locked: true
+    min_source_domains: 3
+    notes: 'Сверить API идентификатор emergency room, баланс по источникам и повторные encounter.'
+  R_SHIFTS:
+    role: primary_regression_conditional
+    task: regression
+    loader: shifts_weather_temperature
+    dataset_version: canonical_partition
+    source_policy: canonical_train_and_preregistered_in_domain_sources_only
+    target_policy: canonical_shifted_evaluation
+    environment_rule: climate_type_x_calendar_period_source_only
+    source_era_boundaries: null
+    stage: need_source_file_and_time_climate_audit
+    target_locked: true
+    min_source_eras: 4
+    notes: '10M full records, 123 meteorological features, mixed climate and time shift; dataset canonical subset differs.'
+  R_COOK:
+    role: primary_regression_conditional
+    task: regression
+    loader: tabred_Cooking_Time
+    source_split_file: splits/default/train.npy
+    target_split_file: splits/default/test.npy
+    source_era_rule: null
+    stage: x_meta_timestamp_quality_unverified
+    target_locked: true
+    min_source_eras: 4
+    notes: 'Не создавать случайные folds вместо естественных eras.'
+  R_ETA:
+    role: secondary_regression_conditional
+    task: regression
+    loader: tabred_Delivery_ETA
+    source_split_file: splits/default/train.npy
+    target_split_file: splits/default/test.npy
+    source_era_rule: null
+    stage: x_meta_timestamp_quality_unverified
+    target_locked: true
+    min_source_eras: 4
+  C_WEATHER:
+    role: secondary_multiclass_classification
+    task: multiclass_classification
+    loader: shifts_weather_precipitation_class
+    stage: optional_and_method_support_not_checked
+    target_locked: true
+    notes: 'Не включать binary-only Anchor Boosting в multiclass без отдельного метода.'
+
+split_policies:
+  iid_domains:
+    outer: pre_registered_held_out_target_domain
+    inner: leave_one_source_domain_out
+    min_source_train_domains_for_inner_fit: 2
+    source_validation_score_aggregation: macro_by_source_domain
+    subdomain_filtering: source_only_rule_logged_before_freeze
+  temporal_domains:
+    outer: pre_registered_future_target
+    inner: forward_chaining_rolling_origin_on_source_only
+    chronological_train_before_validation: true
+    min_train_eras_per_inner_fold: 2
+    source_validation_score_aggregation: macro_by_source_validation_era
+    no_target_dev_usage: true
+
+metrics:
+  binary_classification:
+    primary: roc_auc
+    secondary: [log_loss, balanced_accuracy, accuracy, average_precision, f1]
+    undefined_auc_when_one_class: report_NA_not_replace
+    target_aggregation: macro_valid_domains
+    worst_domain: minimum_roc_auc
+  regression:
+    primary: rmse
+    secondary: [mae, mse, r2, normalized_rmse_train_std]
+    target_aggregation: macro_domains
+    worst_domain: maximum_rmse
+  compute: [fit_wall_seconds, predict_wall_seconds, peak_rss_mb, hpo_total_wall_seconds]
+  uncertainty:
+    method: paired_differences_by_target_domain_and_seed
+    do_not_treat_seeds_as_independent_domains: true
+
+model_registry:
+  rf_classifier: {task: binary_classification, family: RF, role: baseline, stage: not_smoke_tested}
+  extra_trees_classifier: {task: binary_classification, family: RF, role: external_baseline, stage: not_smoke_tested}
+  rf_regressor: {task: regression, family: RF, role: baseline, stage: not_smoke_tested}
+  xgb_classifier: {task: binary_classification, family: GBDT, role: external_baseline, stage: not_smoke_tested}
+  xgb_regressor: {task: regression, family: GBDT, role: external_baseline, stage: not_smoke_tested}
+  lgbm_classifier: {task: binary_classification, family: GBDT, role: paired_baseline_for_anchor, stage: not_smoke_tested}
+  lgbm_regressor: {task: regression, family: GBDT, role: paired_baseline_for_anchor, stage: not_smoke_tested}
+  hist_gbdt_regressor: {task: regression, family: GBDT, role: paired_baseline_for_era, stage: not_smoke_tested}
+  irf_classifier: {task: binary_classification, family: RF, role: required_core_method, implementation_mandatory_attempt: true, stage: formula_or_code_audit_required}
+  irf_regressor: {task: regression, family: RF, role: required_core_method, implementation_mandatory_attempt: true, stage: formula_or_code_audit_required}
+  constrained_rf: {task: binary_classification, family: RF, role: required_core_method, implementation_mandatory_attempt: true, stage: R_repository_and_license_audit_required}
+  meta_forests:
+    task: classification
+    family: RF
+    role: required_core_method
+    reproduction_priority: high
+    implementation_mandatory_attempt: true
+    independent_reimplementation_if_official_code_missing: true
+    stage: full_algorithm_and_code_unverified
+    required_components: [source_meta_train_test, rf_ensembles, feature_masking, accuracy_component, mmd_component, forest_weights, aggregation]
+    required_ablations: [forest_only, meta_validation_only, mmd_only, masking_only, full_method]
+    fidelity_status_initial: unverified
+    never_claim_exact_without_mathematical_verification: true
+  time_robust_forest: {task: binary_classification, family: RF, role: specialized_temporal, stage: smoke_test_required}
+  maxrm_rf_posthoc: {task: regression, family: RF, role: required_core_method, implementation_mandatory_attempt: true, stage: adaXT_smoke_test_required}
+  era_splitting_regressor: {task: regression, family: GBDT, role: required_core_method, implementation_mandatory_attempt: true, stage: api_baseline_smoke_test_required}
+  directional_era_regressor: {task: regression, family: GBDT, role: required_core_variant, implementation_mandatory_attempt: true, stage: api_baseline_smoke_test_required}
+  anchor_boost_regressor: {task: regression, family: GBDT, role: required_core_method, implementation_mandatory_attempt: true, stage: source_only_smoke_test_required}
+  anchor_boost_classifier: {task: binary_classification, family: GBDT, role: required_core_method, implementation_mandatory_attempt: true, stage: source_only_smoke_test_required}
+  mixmax_xgb_classifier: {task: binary_classification, family: GBDT, role: secondary_group_robustness, stage: strict_DG_experiment_not_published}
+
+method_fidelity:
+  allowed_statuses: [exact_author_code, verified_port, independent_reimplementation, independent_interpretation, baseline_only, blocked_unverified]
+  require_original_paper_math_and_code_review: true
+  provenance_for_each_method: true
+  prohibit_silent_approximation: true
+  require_full_meta_forests_attempt: true
+
+codex_autonomy:
+  can_revise_technical_stack: true
+  can_choose_source_only_datasets_and_eras: true
+  can_change_budget_before_P2: true
+  can_select_test_targets_before_P2_without_inspecting_them: true
+  must_log_scientific_decisions: true
+  automatically_proceed_after_P2_if_valid: true
+  require_manual_approval_for_every_gate: false
+  stop_for: [credential_or_license_blocker, paid_computing_permission, nonresolvable_math_ambiguity, inability_to_guarantee_target_blindness]
+
+experiment_stages:
+  P0:
+    purpose: verify_data_source_domains_leakage_and_model_apis
+    target_evaluation_allowed: false
+  P1:
+    purpose: pilot_with_source_only_cv_and_runtime
+    target_evaluation_allowed: false
+    seeds: [11, 23, 47]
+    suggested_max_hpo_trials_per_method_dataset: 8
+    max_source_pseudo_target_folds: 4
+  P2:
+    purpose: autonomous_pre_registered_freeze_config_datasets_models_targets_and_metrics
+    target_evaluation_allowed: false
+    prerequisites: [P0_passed, P1_passed, source_only_preprocessing_audited]
+    manual_user_signoff_required: false
+    require_freeze_hash_and_manifest_before_target: true
+  P3:
+    purpose: final_source_only_HPO_and_one_preregistered_target_evaluation_series
+    target_evaluation_allowed: true
+    seeds_proposed: [11, 23, 47, 59, 83]
+    suggested_max_hpo_trials_per_method_dataset: 20
+    require_frozen_protocol_hash: true
+    proceed_without_extra_confirmation_if_gates_pass: true
+  P4:
+    purpose: create_scientific_tables_figures_statistics_discussion_without_retuning
+    require_final_report_and_method_fidelity_matrix: true
+
+reporting:
+  require_per_domain_metrics: true
+  require_negative_results: true
+  separate_source_cv_and_target_results: true
+  require_paired_baselines: true
+  require_environment_and_git_checksums: true
+  require_method_source_version_and_license: true
+  do_not_rank_algorithms_from_different_datasets: true
+  require_meta_forests_replication_notes: true
+  require_six_core_method_statuses: true
+  require_full_reproducibility_artifacts: true
+  require_negative_results: true
+  require_source_target_access_audit: true

@@ -1,0 +1,26 @@
+stage: P1_source_only_pilot
+datasets: [acs_income, hospital_readmission, beijing_pm25, gas_turbine_co, synthetic_classification, synthetic_regression]
+seeds: [11]
+max_folds: 2
+target_access: false
+preprocessing:
+  imputation: fold_local_median_or_most_frequent
+  numeric_scale: fold_local_standard_scaler
+  categorical_encoding: fold_local_one_hot_max_16_categories
+  unknown_categories: ignore
+hpo:
+  rf: [{max_depth: 4}, {max_depth: 6}]
+  hist_gbdt: [{learning_rate: 0.05}, {learning_rate: 0.1}]
+  irf: [{penalty: 0.1}, {penalty: 1.0}]
+  irf_paired: [{}]
+  crf: [{lambda1: 1.0, lambda2: 1.0}, {lambda1: 5.0, lambda2: 5.0}]
+  crf_paired: [{}]
+  meta_forests_interpretation: [{alpha: -1.0}, {alpha: -4.0}]
+  meta_matched_rf: [{}]
+  maxrm_posthoc: [{max_depth: 3}, {max_depth: 4}]
+  maxrm_paired: [{max_depth: 3}, {max_depth: 4}]
+  era: [{boltzmann_alpha: 0.0}, {boltzmann_alpha: -5.0}]
+  directional_era: [{}]
+  era_paired: [{}]
+  anchor: [{gamma: 1.0}, {gamma: 4.0}]
+  anchor_paired: [{}]
