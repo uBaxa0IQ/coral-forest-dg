@@ -1,6 +1,6 @@
 # Методика и результаты НИР
 
-Выполнено 1050 расширенных source-CV fits; успешных 1050. Финальных зарегистрированных model/seed запусков с метриками: 0/126.
+Выполнено 1050 расширенных source-CV fits; успешных 1050. Финальных зарегистрированных model/seed запусков с метриками: 126/126.
 
 ## Экспериментальная постановка
 
@@ -16,7 +16,61 @@ IRF и MSE-posthoc MaxRM независимо реализованы по фор
 
 Исходные результаты — `source_cv_metrics.csv`; сводки — `tables/source_cv_summary.csv`. Они показывают перенос между source-средами и не являются финальными target-показателями.
 
-Target ещё не оценён. Численные target-выводы отсутствуют.
+Для acs_income (AUROC) получены следующие средние macro-показатели по трём seed:
+
+- anchor: 0.860396; SD по seed 0.000000; exact_author_code.
+- anchor_paired: 0.860396; SD по seed 0.000000; baseline_only.
+- crf: 0.809434; SD по seed 0.007915; independent_reimplementation.
+- crf_paired: 0.818371; SD по seed 0.002593; baseline_only.
+- hist_gbdt: 0.861032; SD по seed 0.000000; baseline_only.
+- irf: 0.726347; SD по seed 0.023684; independent_reimplementation.
+- irf_paired: 0.821473; SD по seed 0.006486; baseline_only.
+- meta_forests_interpretation: 0.838951; SD по seed 0.002484; independent_interpretation.
+- meta_matched_rf: 0.848962; SD по seed 0.001027; baseline_only.
+- rf: 0.856182; SD по seed 0.000305; baseline_only.
+
+Для beijing_pm25 (RMSE) получены следующие средние macro-показатели по трём seed:
+
+- anchor: 25.970756; SD по seed 0.000000; exact_author_code.
+- anchor_paired: 25.847518; SD по seed 0.000000; baseline_only.
+- directional_era: 32.251172; SD по seed 0.000000; exact_author_code.
+- era: 29.033716; SD по seed 0.000000; exact_author_code.
+- era_paired: 27.976706; SD по seed 0.000000; baseline_only.
+- hist_gbdt: 26.192257; SD по seed 0.000000; baseline_only.
+- irf: 28.262893; SD по seed 0.134926; independent_reimplementation.
+- irf_paired: 28.269190; SD по seed 0.099811; baseline_only.
+- maxrm_paired: 28.447364; SD по seed 0.121210; baseline_only.
+- maxrm_posthoc: 29.010080; SD по seed 0.176507; independent_reimplementation.
+- rf: 27.154206; SD по seed 0.017934; baseline_only.
+
+Для gas_turbine_co (RMSE) получены следующие средние macro-показатели по трём seed:
+
+- anchor: 1.469326; SD по seed 0.000000; exact_author_code.
+- anchor_paired: 1.465159; SD по seed 0.000000; baseline_only.
+- directional_era: 1.813442; SD по seed 0.000000; exact_author_code.
+- era: 1.510046; SD по seed 0.000000; exact_author_code.
+- era_paired: 1.495436; SD по seed 0.000000; baseline_only.
+- hist_gbdt: 1.449322; SD по seed 0.000000; baseline_only.
+- irf: 1.433676; SD по seed 0.016532; independent_reimplementation.
+- irf_paired: 1.430438; SD по seed 0.010083; baseline_only.
+- maxrm_paired: 1.420274; SD по seed 0.007693; baseline_only.
+- maxrm_posthoc: 1.415941; SD по seed 0.005563; independent_reimplementation.
+- rf: 1.437259; SD по seed 0.003470; baseline_only.
+
+Для hospital_readmission (AUROC) получены следующие средние macro-показатели по трём seed:
+
+- anchor: 0.605090; SD по seed 0.000000; exact_author_code.
+- anchor_paired: 0.605090; SD по seed 0.000000; baseline_only.
+- crf: 0.543064; SD по seed 0.008650; independent_reimplementation.
+- crf_paired: 0.574254; SD по seed 0.006754; baseline_only.
+- hist_gbdt: 0.616094; SD по seed 0.000000; baseline_only.
+- irf: 0.564579; SD по seed 0.009704; independent_reimplementation.
+- irf_paired: 0.574597; SD по seed 0.001283; baseline_only.
+- meta_forests_interpretation: 0.566324; SD по seed 0.012737; independent_interpretation.
+- meta_matched_rf: 0.623656; SD по seed 0.003770; baseline_only.
+- rf: 0.623960; SD по seed 0.002564; baseline_only.
+
+Парные различия для каждого target-домена и seed доступны в `tables/paired_differences.csv`; положительное improvement означает улучшение. Все отрицательные значения сохранены. Графики используют среднее по доменам, затем по seed.
 
 ## Интерпретация и ограничения
 

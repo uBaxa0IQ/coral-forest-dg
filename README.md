@@ -27,3 +27,24 @@ uv run pytest -q
 ```
 
 Рабочий статус и границы фактически выполненного описываются в [docs/status.md](docs/status.md). Полный цикл: P0 аудит → P1 source-only пилоты → P2 фиксация протокола → P3 предзаданная серия target-оценок → P4 научный анализ. Наличие кода не означает выполненного эксперимента, а доступный репозиторий метода не означает проверенной репликации.
+
+## Полученные результаты
+
+Первая ограниченная серия завершена: 1050 расширенных source-CV fits, 60 Meta-forests ablations, 126 финальных model/seed запусков и 252 per-domain оценки. Проверены 15 тестов. См. [научный разбор](reports/research_findings.md), [полные результаты](reports/results_and_discussion.md), [статусы методов](reports/method_matrix.csv), [ограничения](reports/limitations.md) и [пререгистрацию](docs/preregistration.md).
+
+Это capped-source исследование, не завершённая точная репликация всех авторских статей. Meta-forests остаётся независимой интерпретацией. Библиотека содержит также исторические кандидаты; отсутствующие PDF перечислены в [аудите библиотеки](docs/literature_audit.md).
+
+## Воспроизведение источников и вычислений
+
+```powershell
+uv sync --extra research --extra test
+uv run python tools/prepare_sources.py
+uv run python -c "from nir_dg.datasets import prepare_gas; prepare_gas()"
+foreach ($dataset in @('acs_income','hospital_readmission','beijing_pm25','gas_turbine_co')) {
+  uv run nir-dg source-cv --config configs/study_source_cv.yaml --run-dir "runs/reproduction_$dataset" --datasets $dataset
+}
+```
+
+Source-подготовка не требует target. Свежие source-CV результаты сохраняются отдельно в `runs/reproduction_*`, их можно сравнить с архивными `runs/study_cv_v1_*`. Уже сохранённые run directories не перезаписывают результаты несовместимым кодом. `tools/build_reports.py` собирает **архивную первую серию** из study_cv_v1 и final_v1, не из произвольных reproduction directories. Meta-ablations уже сохранены в runs/meta_ablations_v1; скрипт добавляет записи при повторном вызове, поэтому его не следует запускать поверх архива.
+
+Для точной архивной среды вычислений final_v1 используйте commit `27a8663`; после него была только библиографическая правка Python-инструмента, описанная в docs/protocol_changes.md. Первоначальная серия была запущена командами `tools/final_study.py freeze` и `tools/final_study.py evaluate`; повторно запускать её на том же target для подбора моделей нельзя. Проверка готовых отчётов не открывает raw target.
