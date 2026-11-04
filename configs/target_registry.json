@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "historically_exposed_targets": {
+    "acs_2018": ["CO", "NC", "MA"],
+    "hospital_admission_source": ["7"],
+    "beijing_station": ["Huairou", "Shunyi"],
+    "gas_turbine_year": ["2014", "2015"]
+  },
+  "historically_observed_sources": {
+    "acs_2018": ["CA", "TX", "NY", "FL", "IL", "WA", "GA", "AZ"],
+    "beijing_station": ["Aotizhongxin", "Changping", "Dingling", "Dongsi", "Guanyuan", "Gucheng"],
+    "gas_turbine_year": ["2011", "2012", "2013"],
+    "hospital_admission_source": "all non-7 raw source groups were inspected; not fresh holdouts"
+  },
+  "reserved_v2_new_targets": {
+    "acs_2018": ["MN", "OH", "PA", "OR", "VA"],
+    "beijing_station": ["Nongzhanguan", "Tiantan", "Wanliu", "Wanshouxigong"],
+    "appliances_time": ["2016-04-02/2016-04-30", "2016-05-01/2016-05-27"]
+  },
+  "policy": "No historically exposed target or previously observed source may be described as a new independent unseen-domain holdout. Newly reserved target values remain unread until v2 freeze. Hospital and Gas Turbine have no eligible new holdouts in currently cached releases."
+}
