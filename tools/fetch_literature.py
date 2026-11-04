@@ -114,12 +114,19 @@ def archive(record, previous):
             if not content.startswith(b"%PDF-"):
                 raise ValueError("Response is not a PDF (HTML/paywall is not archived as full text)")
             reader = PdfReader(io.BytesIO(content))
-            texts = [f"\n\n--- PDF PAGE {i + 1} ---\n" + (p.extract_text() or "") for i, p in enumerate(reader.pages)]
             if not reader.pages:
                 raise ValueError("PDF has no readable pages")
             path.write_bytes(content)
+            texts, extraction_errors = [], []
+            for i, page in enumerate(reader.pages):
+                try:
+                    extracted = page.extract_text() or ""
+                except Exception as error:
+                    extracted = "[Text extraction failed on this page; original PDF retained]"
+                    extraction_errors.append(dict(page=i + 1, error=str(error)))
+                texts.append(f"\n\n--- PDF PAGE {i + 1} ---\n" + extracted)
             (LIB / "text" / f"{identifier}.txt").write_text("".join(texts), encoding="utf-8")
-            return dict(id=identifier, status="downloaded", file=path.relative_to(ROOT).as_posix(), sha256=sha256(content).hexdigest(), size_bytes=len(content), pages=len(reader.pages), url=url, resolved_url=response.url, retrieved_at=datetime.now(timezone.utc).isoformat(), attempts=attempts, content_identity="requires_reader_verification", redistribution="not_assessed_local_archive")
+            return dict(id=identifier, status="downloaded", file=path.relative_to(ROOT).as_posix(), sha256=sha256(content).hexdigest(), size_bytes=len(content), pages=len(reader.pages), url=url, resolved_url=response.url, retrieved_at=datetime.now(timezone.utc).isoformat(), attempts=attempts, text_extraction_errors=extraction_errors, content_identity="requires_reader_verification", redistribution="not_assessed_local_archive")
         except Exception as error:
             attempts.append({"url": url, "error": str(error)})
     return dict(id=identifier, status="unavailable_open_pdf", attempts=attempts, checked_at=datetime.now(timezone.utc).isoformat())

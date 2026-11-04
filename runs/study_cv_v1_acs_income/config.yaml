@@ -1,0 +1,67 @@
+datasets:
+- acs_income
+- hospital_readmission
+- beijing_pm25
+- gas_turbine_co
+hpo:
+  anchor:
+  - gamma: 1.0
+    rounds: 100
+  - gamma: 4.0
+    rounds: 100
+  anchor_paired:
+  - rounds: 100
+  crf:
+  - lambda1: 1.0
+    lambda2: 1.0
+  - lambda1: 5.0
+    lambda2: 5.0
+  crf_paired:
+  - {}
+  directional_era:
+  - rounds: 100
+  era:
+  - boltzmann_alpha: 0.0
+    rounds: 100
+  - boltzmann_alpha: -5.0
+    rounds: 100
+  era_paired:
+  - rounds: 100
+  hist_gbdt:
+  - learning_rate: 0.05
+    rounds: 100
+  - learning_rate: 0.1
+    rounds: 100
+  irf:
+  - penalty: 0.1
+  - penalty: 1.0
+  irf_paired:
+  - {}
+  maxrm_paired:
+  - max_depth: 3
+  - max_depth: 4
+  maxrm_posthoc:
+  - max_depth: 3
+  - max_depth: 4
+  meta_forests_interpretation:
+  - alpha: -1.0
+  - alpha: -4.0
+  meta_matched_rf:
+  - {}
+  rf:
+  - max_depth: 4
+    n_estimators: 100
+  - max_depth: null
+    n_estimators: 100
+max_folds: null
+preprocessing:
+  categorical_encoding: fold_local_one_hot_max_16_categories
+  imputation: fold_local_median_or_most_frequent
+  numeric_scale: fold_local_standard_scaler
+  unknown_categories: ignore
+seeds:
+- 11
+- 23
+- 47
+stage: P1_expanded_source_validation
+target_access: false

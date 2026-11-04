@@ -47,6 +47,12 @@ def test_meta_mmd_weights_source_meta_test_and_masks():
         assert h["train_domain"] != h["meta_test_domain"]
         assert int(h["meta_test_domain"]) in env
         assert h["features"]
+    previous_used = {}
+    for h, (forest, available) in zip(model.history_, model.members_):
+        if h["train_domain"] in previous_used and len(previous_used[h["train_domain"]]) < X.shape[1]:
+            assert not set(available) & previous_used[h["train_domain"]]
+        local_used = np.unique(np.concatenate([t.tree_.feature[t.tree_.feature >= 0] for t in forest.estimators_]))
+        previous_used[h["train_domain"]] = set(available[local_used])
     np.testing.assert_allclose(model.predict_proba(X).sum(axis=1), 1.)
     again = MetaForestsClassifier(iterations=3, trees_per_forest=2).fit(X, (y > 1).astype(int), env)
     np.testing.assert_allclose(model.predict_proba(X), again.predict_proba(X))
@@ -86,3 +92,22 @@ def test_era_baseline_matches_hist_engine_on_simple_source_data():
     era = Adapter("era_paired", "regression", 11).fit(X, y, env)
     ref = HistGradientBoostingRegressor(max_iter=30, max_leaf_nodes=8, max_bins=16, min_samples_leaf=12, early_stopping=False, random_state=11, learning_rate=.1).fit(X, y)
     np.testing.assert_allclose(era.predict_values(X), ref.predict(X), atol=1e-8)
+
+
+def test_anchor_gamma_one_is_independent_of_anchors():
+    from anchorboosting import AnchorBooster
+    X, y, env = toy()
+    for task in ("classification", "regression"):
+        target = (y > 1).astype(int) if task == "classification" else y
+        kwargs = dict(gamma=1., num_boost_round=10, objective="binary" if task == "classification" else "regression", num_leaves=4, num_threads=1, verbosity=-1, min_gain_to_split=1e-8)
+        a = AnchorBooster(**kwargs).fit(X, target, Z=np.eye(4)[env])
+        b = AnchorBooster(**kwargs).fit(X, target, Z=None)
+        np.testing.assert_allclose(a.predict(X), b.predict(X), atol=1e-10)
+
+
+def test_anchor_gamma_one_regression_matches_lightgbm():
+    from lightgbm import LGBMRegressor
+    X, y, env = toy()
+    anchor = Adapter("anchor_paired", "regression", 11).fit(X, y, env)
+    baseline = LGBMRegressor(n_estimators=30, learning_rate=.1, num_leaves=8, min_child_samples=12, min_split_gain=1e-8, verbosity=-1, n_jobs=1, random_state=11, deterministic=True, force_col_wise=True).fit(X, y)
+    np.testing.assert_allclose(anchor.predict_values(X), baseline.predict(X), atol=2e-6)
