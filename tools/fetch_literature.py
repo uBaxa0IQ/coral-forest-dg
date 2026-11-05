@@ -96,6 +96,15 @@ def discover_pdf(record):
 
 def archive(record, previous):
     identifier = record["id"]
+    if record.get("role") == "dataset_documentation":
+        try:
+            response = requests.get(record["url"], headers=HEADERS, timeout=(10, 25))
+            response.raise_for_status()
+            web_path = LIB / "pages" / f"{identifier}.html"
+            web_path.write_bytes(response.content)
+            return dict(id=identifier, status="web_documentation_archived", file=web_path.relative_to(ROOT).as_posix(), sha256=sha256(response.content).hexdigest(), url=record["url"], retrieved_at=datetime.now(timezone.utc).isoformat(), original_pdf=False)
+        except Exception as error:
+            return dict(id=identifier, status="web_documentation_unavailable", original_pdf=False, error=str(error))
     path = LIB / "pdfs" / f"{identifier}.pdf"
     if path.exists() and previous.get("sha256") == sha256(path.read_bytes()).hexdigest():
         return previous

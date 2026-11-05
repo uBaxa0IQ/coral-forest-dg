@@ -30,6 +30,20 @@ uv run pytest -q
 
 ## Полученные результаты
 
+Вторая серия завершена 5 ноября 2026 с явными оговорками аудита: **757 полных заданий и 5 с source-отказом MaxRM**, 40 871 сохранённый успешный source fit, 13 332 full-source конфигурации и 41 622 target-domain оценки. Независимо пересчитаны 273 144 метрики; saved-model predictions воспроизведены при исходном представлении входов. Основные результаты и ограничения:
+
+- [Полный отчёт PDF](reports/series_v2/research_report.pdf), [текст](reports/series_v2/research_report.md), [читатель с фильтрами](reports/series_v2/index.html).
+- [Краткие выводы](reports/series_v2/executive_summary.md), [CSV и словарь полей](reports/series_v2/data_dictionary.md), [итоговый аудит](reports/series_v2/audit/final_integrity.json).
+- [Независимый пересчёт первой серии](reports/audit_v1/audit_report.md), [пререгистрация v2](docs/series_v2/preregistration.md), [ограничения реализации](docs/series_v2/implementation_findings.md).
+
+В предзаданном spurious-сценарии H1 увеличение K4→K16 при одном N снизило преимущество IRF и Meta в classification после Holm. Это результат о конкретных source-selected pipelines. Source/target ranking настроек может расходиться; универсального победителя DG на реальных задачах нет. H2 MaxRM неполон, неуспешные fits не подменялись baseline. Обнаружены также IRF/Appliances numerical split defects и np.nan/None cache-различие первого Beijing job. Числа не исправлялись задним числом.
+
+Библиотека теперь содержит 63 оригинальных PDF-файла, 52 уникальных hashes; две старые статьи остаются недоступными. Web-документация UCI хранится отдельно и не выдаётся за оригинальный PDF. [Аудит библиотеки](docs/literature_audit.md).
+
+Уже использованные targets перечислены в [реестре экспозиции v2](configs/target_exposure_ledger_v2.json). Они не являются новыми независимыми финальными тестами для дальнейших решений.
+
+### Архивная первая серия
+
 Первая ограниченная серия завершена: 1050 расширенных source-CV fits, 60 Meta-forests ablations, 126 финальных model/seed запусков и 252 per-domain оценки. Проверены 15 тестов. См. [научный разбор](reports/research_findings.md), [полные результаты](reports/results_and_discussion.md), [статусы методов](reports/method_matrix.csv), [ограничения](reports/limitations.md) и [пререгистрацию](docs/preregistration.md).
 
 Это capped-source исследование, не завершённая точная репликация всех авторских статей. Meta-forests остаётся независимой интерпретацией. Библиотека содержит также исторические кандидаты; отсутствующие PDF перечислены в [аудите библиотеки](docs/literature_audit.md).

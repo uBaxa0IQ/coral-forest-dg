@@ -1,0 +1,17 @@
+{
+  "kind": "forensic reconstruction, not a model or metric correction",
+  "training_runtime_modified": false,
+  "original_predictions_modified": false,
+  "jobs": {
+    "5259a196ef641ff1": {
+      "dataset": "beijing_pm25",
+      "feature": "wd",
+      "original_missing_scalar": "numpy.nan from pandas.read_csv",
+      "cached_missing_scalar": "None from pandas.read_parquet",
+      "missing_rows": 357,
+      "input_reconstruction": "Replace only cached null wd values with numpy.nan, reproducing the uncached CSV-loader branch before its first cache read.",
+      "evidence": "model_replay_diagnostic.json and null_representation_diagnostic.json; all 17 model probes match exactly after reconstruction",
+      "limitation": "The original target loader returned an uncached frame to its cache-creating job and reloaded frames to later jobs. Hashing semantic missing values did not capture this preprocessing distinction. Across-job Beijing comparisons have this qualification."
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "spec": {
+    "kind": "synthetic",
+    "dataset": "synthetic",
+    "task": "regression",
+    "scenario": "heteroscedastic",
+    "k": 16,
+    "n": 8192,
+    "imbalance": 1,
+    "replica": 9,
+    "context_id": "f258e268bde793f3",
+    "model_seed": 11,
+    "job_id": "6bc0e680d673fe3e"
+  },
+  "at": "2026-11-04T23:46:02.463194+00:00",
+  "traceback": "concurrent.futures.process._RemoteTraceback: \n\"\"\"\nTraceback (most recent call last):\n  File \"C:\\Users\\uBaxa\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\concurrent\\futures\\process.py\", line 263, in _process_worker\n    r = call_item.fn(*call_item.args, **call_item.kwargs)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\coral-forest-dg\\src\\nir_dg\\series_v2\\engine.py\", line 180, in run_job\n    selected,(processor,models)=source_stage(spec)\n                                ^^^^^^^^^^^^^^^^^^\n  File \"D:\\coral-forest-dg\\src\\nir_dg\\series_v2\\engine.py\", line 127, in source_stage\n    m=Model(method,task,spec[\"model_seed\"],params).fit(a,y[tr],env[tr]);p=m.predict(b)\n      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\coral-forest-dg\\src\\nir_dg\\series_v2\\models.py\", line 104, in fit\n    self.model_=EfficientMaxRM(seed,p[\"robust\"]).fit(X,z,np.asarray(env))\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\coral-forest-dg\\src\\nir_dg\\series_v2\\models.py\", line 57, in fit\n    raise RuntimeError(f\"Unverified MaxRM optimum: {problem.status}\")\nRuntimeError: Unverified MaxRM optimum: optimal_inaccurate\n\"\"\"\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"D:\\coral-forest-dg\\tools\\run_series_v2.py\", line 36, in main\n    r=future.result();completed+=1\n      ^^^^^^^^^^^^^^^\n  File \"C:\\Users\\uBaxa\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\concurrent\\futures\\_base.py\", line 449, in result\n    return self.__get_result()\n           ^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\uBaxa\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\concurrent\\futures\\_base.py\", line 401, in __get_result\n    raise self._exception\nRuntimeError: Unverified MaxRM optimum: optimal_inaccurate\n"
+}

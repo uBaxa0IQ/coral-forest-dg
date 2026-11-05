@@ -1,0 +1,33 @@
+// Render and exercise ONLY the local offline report in an isolated headless Edge.
+const fs = require('fs');
+const path = require('path');
+const {pathToFileURL} = require('url');
+const {chromium} = require('C:/Users/uBaxa/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+(async()=>{
+  const root=path.resolve(__dirname,'..','reports','series_v2');
+  const review=path.join(root,'html_review');fs.mkdirSync(review,{recursive:true});
+  const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'});
+  const page=await browser.newPage({viewport:{width:1440,height:1050},deviceScaleFactor:1});
+  const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+  await page.route(/^https?:/,route=>route.abort());
+  await page.goto(pathToFileURL(path.join(root,'index.html')).href,{waitUntil:'load'});
+  await page.screenshot({path:path.join(review,'overview.png')});
+  const selects=page.locator('#filters select');
+  if(await selects.count()!==7) throw new Error('Expected seven report filters');
+  await selects.nth(0).selectOption('acs_income');
+  await selects.nth(3).selectOption('8');await selects.nth(4).selectOption('16000');
+  if(await page.locator('#rows tr').count()!==8) throw new Error('Wrong ACS condition count');
+  await page.locator('#explorer').scrollIntoViewIfNeeded();await page.screenshot({path:path.join(review,'filtered_real.png')});
+  for(let i=0;i<7;i++) await selects.nth(i).selectOption('');
+  const choices=['synthetic','classification','spurious','16','8192','1','irf'];
+  for(let i=0;i<choices.length;i++) await selects.nth(i).selectOption(choices[i]);
+  if(await page.locator('#rows tr').count()!==1) throw new Error('Wrong synthetic condition count');
+  const text=await page.locator('#rows').innerText();
+  if(!text.includes('8192')||!text.includes('0.36517')) throw new Error('Training N or audited IRF score rendered incorrectly');
+  await page.screenshot({path:path.join(review,'filtered_synthetic.png')});
+  const images=await page.locator('figure img').evaluateAll(xs=>xs.map(x=>({source:x.getAttribute('src'),complete:x.complete,width:x.naturalWidth})));
+  if(images.length!==10||images.some(x=>!x.complete||!x.width)) throw new Error('Missing plot assets');
+  if(errors.length) throw new Error(errors.join('\n'));
+  fs.writeFileSync(path.join(root,'html_validation.json'),JSON.stringify({page_errors:errors,filters:7,real_rows_verified:8,synthetic_rows_verified:1,training_n_verified:true,plots:images,offline:true,headless_isolated_browser:true},null,2));
+  await browser.close();console.log('HTML report validated');
+})().catch(e=>{console.error(e);process.exit(1)});
