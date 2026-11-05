@@ -1,0 +1,527 @@
+{
+  "frozen_at": "2026-11-05T07:48:39.211677+00:00",
+  "protocol": {
+    "purpose": "exploratory source-only capacity/solver feasibility; not best OOD comparison",
+    "contexts": [
+      {
+        "spec": {
+          "kind": "synthetic",
+          "dataset": "synthetic",
+          "task": "classification",
+          "scenario": "spurious",
+          "k": 8,
+          "n": 4096,
+          "imbalance": 1.0,
+          "replica": 1001,
+          "model_seed": 11
+        },
+        "source_hash": "04092520aaf22a1e2a9f2e63db3eb4bf8e78df73cbf85bb9bf5efaae31482d89",
+        "folds": [
+          {
+            "train_rows": 3584,
+            "validation_rows": 512
+          },
+          {
+            "train_rows": 3584,
+            "validation_rows": 512
+          }
+        ]
+      },
+      {
+        "spec": {
+          "kind": "synthetic",
+          "dataset": "synthetic",
+          "task": "regression",
+          "scenario": "spurious",
+          "k": 8,
+          "n": 4096,
+          "imbalance": 1.0,
+          "replica": 1001,
+          "model_seed": 11
+        },
+        "source_hash": "48d83722290aa32197afa5f482efb471ff2ac4621ba107711acd1ed819a9db16",
+        "folds": [
+          {
+            "train_rows": 3584,
+            "validation_rows": 512
+          },
+          {
+            "train_rows": 3584,
+            "validation_rows": 512
+          }
+        ]
+      }
+    ],
+    "configurations": {
+      "classification": [
+        {
+          "method": "rf",
+          "profile": 0,
+          "parameters": {}
+        },
+        {
+          "method": "rf",
+          "profile": 1,
+          "parameters": {}
+        },
+        {
+          "method": "extra_trees",
+          "profile": 0,
+          "parameters": {}
+        },
+        {
+          "method": "extra_trees",
+          "profile": 1,
+          "parameters": {}
+        },
+        {
+          "method": "hist_gbdt",
+          "profile": 0,
+          "parameters": {}
+        },
+        {
+          "method": "hist_gbdt",
+          "profile": 1,
+          "parameters": {}
+        },
+        {
+          "method": "irf",
+          "profile": 0,
+          "parameters": {
+            "penalty": 0.0
+          }
+        },
+        {
+          "method": "irf",
+          "profile": 0,
+          "parameters": {
+            "penalty": 0.005
+          }
+        },
+        {
+          "method": "irf",
+          "profile": 0,
+          "parameters": {
+            "penalty": 0.05
+          }
+        },
+        {
+          "method": "irf",
+          "profile": 1,
+          "parameters": {
+            "penalty": 0.0
+          }
+        },
+        {
+          "method": "irf",
+          "profile": 1,
+          "parameters": {
+            "penalty": 0.005
+          }
+        },
+        {
+          "method": "irf",
+          "profile": 1,
+          "parameters": {
+            "penalty": 0.05
+          }
+        },
+        {
+          "method": "anchor",
+          "profile": 0,
+          "parameters": {
+            "gamma": 1.0
+          }
+        },
+        {
+          "method": "anchor",
+          "profile": 0,
+          "parameters": {
+            "gamma": 2.0
+          }
+        },
+        {
+          "method": "anchor",
+          "profile": 0,
+          "parameters": {
+            "gamma": 8.0
+          }
+        },
+        {
+          "method": "anchor",
+          "profile": 1,
+          "parameters": {
+            "gamma": 1.0
+          }
+        },
+        {
+          "method": "anchor",
+          "profile": 1,
+          "parameters": {
+            "gamma": 2.0
+          }
+        },
+        {
+          "method": "anchor",
+          "profile": 1,
+          "parameters": {
+            "gamma": 8.0
+          }
+        },
+        {
+          "method": "crf",
+          "profile": 0,
+          "parameters": {
+            "lambda1": 0.0,
+            "lambda2": 0.0
+          }
+        },
+        {
+          "method": "crf",
+          "profile": 0,
+          "parameters": {
+            "lambda1": 0.05,
+            "lambda2": 0.0
+          }
+        },
+        {
+          "method": "crf",
+          "profile": 0,
+          "parameters": {
+            "lambda1": 0.0,
+            "lambda2": 0.05
+          }
+        },
+        {
+          "method": "crf",
+          "profile": 0,
+          "parameters": {
+            "lambda1": 0.05,
+            "lambda2": 0.05
+          }
+        },
+        {
+          "method": "crf",
+          "profile": 1,
+          "parameters": {
+            "lambda1": 0.0,
+            "lambda2": 0.0
+          }
+        },
+        {
+          "method": "crf",
+          "profile": 1,
+          "parameters": {
+            "lambda1": 0.05,
+            "lambda2": 0.0
+          }
+        },
+        {
+          "method": "crf",
+          "profile": 1,
+          "parameters": {
+            "lambda1": 0.0,
+            "lambda2": 0.05
+          }
+        },
+        {
+          "method": "crf",
+          "profile": 1,
+          "parameters": {
+            "lambda1": 0.05,
+            "lambda2": 0.05
+          }
+        },
+        {
+          "method": "meta",
+          "profile": 0,
+          "parameters": {
+            "weighting": "uniform"
+          }
+        },
+        {
+          "method": "meta",
+          "profile": 0,
+          "parameters": {
+            "weighting": "accuracy"
+          }
+        },
+        {
+          "method": "meta",
+          "profile": 0,
+          "parameters": {
+            "weighting": "full"
+          }
+        },
+        {
+          "method": "meta",
+          "profile": 1,
+          "parameters": {
+            "weighting": "uniform"
+          }
+        },
+        {
+          "method": "meta",
+          "profile": 1,
+          "parameters": {
+            "weighting": "accuracy"
+          }
+        },
+        {
+          "method": "meta",
+          "profile": 1,
+          "parameters": {
+            "weighting": "full"
+          }
+        }
+      ],
+      "regression": [
+        {
+          "method": "rf",
+          "profile": 0,
+          "parameters": {}
+        },
+        {
+          "method": "rf",
+          "profile": 1,
+          "parameters": {}
+        },
+        {
+          "method": "extra_trees",
+          "profile": 0,
+          "parameters": {}
+        },
+        {
+          "method": "extra_trees",
+          "profile": 1,
+          "parameters": {}
+        },
+        {
+          "method": "hist_gbdt",
+          "profile": 0,
+          "parameters": {}
+        },
+        {
+          "method": "hist_gbdt",
+          "profile": 1,
+          "parameters": {}
+        },
+        {
+          "method": "irf",
+          "profile": 0,
+          "parameters": {
+            "penalty": 0.0
+          }
+        },
+        {
+          "method": "irf",
+          "profile": 0,
+          "parameters": {
+            "penalty": 0.005
+          }
+        },
+        {
+          "method": "irf",
+          "profile": 0,
+          "parameters": {
+            "penalty": 0.05
+          }
+        },
+        {
+          "method": "irf",
+          "profile": 1,
+          "parameters": {
+            "penalty": 0.0
+          }
+        },
+        {
+          "method": "irf",
+          "profile": 1,
+          "parameters": {
+            "penalty": 0.005
+          }
+        },
+        {
+          "method": "irf",
+          "profile": 1,
+          "parameters": {
+            "penalty": 0.05
+          }
+        },
+        {
+          "method": "anchor",
+          "profile": 0,
+          "parameters": {
+            "gamma": 1.0
+          }
+        },
+        {
+          "method": "anchor",
+          "profile": 0,
+          "parameters": {
+            "gamma": 2.0
+          }
+        },
+        {
+          "method": "anchor",
+          "profile": 0,
+          "parameters": {
+            "gamma": 8.0
+          }
+        },
+        {
+          "method": "anchor",
+          "profile": 1,
+          "parameters": {
+            "gamma": 1.0
+          }
+        },
+        {
+          "method": "anchor",
+          "profile": 1,
+          "parameters": {
+            "gamma": 2.0
+          }
+        },
+        {
+          "method": "anchor",
+          "profile": 1,
+          "parameters": {
+            "gamma": 8.0
+          }
+        },
+        {
+          "method": "maxrm",
+          "profile": 0,
+          "parameters": {
+            "robust": false
+          }
+        },
+        {
+          "method": "maxrm",
+          "profile": 0,
+          "parameters": {
+            "robust": true
+          }
+        },
+        {
+          "method": "maxrm",
+          "profile": 1,
+          "parameters": {
+            "robust": false
+          }
+        },
+        {
+          "method": "maxrm",
+          "profile": 1,
+          "parameters": {
+            "robust": true
+          }
+        },
+        {
+          "method": "era",
+          "profile": 0,
+          "parameters": {
+            "strength": 0.0
+          }
+        },
+        {
+          "method": "era",
+          "profile": 0,
+          "parameters": {
+            "strength": 0.1
+          }
+        },
+        {
+          "method": "era",
+          "profile": 0,
+          "parameters": {
+            "strength": 1.0
+          }
+        },
+        {
+          "method": "era",
+          "profile": 1,
+          "parameters": {
+            "strength": 0.0
+          }
+        },
+        {
+          "method": "era",
+          "profile": 1,
+          "parameters": {
+            "strength": 0.1
+          }
+        },
+        {
+          "method": "era",
+          "profile": 1,
+          "parameters": {
+            "strength": 1.0
+          }
+        },
+        {
+          "method": "directional_era",
+          "profile": 0,
+          "parameters": {
+            "strength": 0.0
+          }
+        },
+        {
+          "method": "directional_era",
+          "profile": 0,
+          "parameters": {
+            "strength": 0.1
+          }
+        },
+        {
+          "method": "directional_era",
+          "profile": 0,
+          "parameters": {
+            "strength": 1.0
+          }
+        },
+        {
+          "method": "directional_era",
+          "profile": 1,
+          "parameters": {
+            "strength": 0.0
+          }
+        },
+        {
+          "method": "directional_era",
+          "profile": 1,
+          "parameters": {
+            "strength": 0.1
+          }
+        },
+        {
+          "method": "directional_era",
+          "profile": 1,
+          "parameters": {
+            "strength": 1.0
+          }
+        }
+      ]
+    },
+    "selection": "largest mean source-heldout AUROC / negative MSE divided by full-source variance; order breaks ties; any failed fold excludes config",
+    "workers": 2,
+    "model_seeds": [
+      11
+    ],
+    "target_evaluations": 0,
+    "target_tripwire": "generator and real target entrypoints replaced with raising functions inside workers; not an OS security guarantee",
+    "failure_policy": "retain failures, no quality-based retry/fallback",
+    "maxrm_certificate_tolerance": "1e-6 * max(1, primal); solver status optimal required",
+    "code_hashes": {
+      "tools/run_closeout_source_pilot.py": "0c1359c98a4e6bff2a1a67b5ab1982fbd9b2d0135cbf4c9c2e5b46c1c83d572c",
+      "research_versions/__init__.py": "a3806a5dca13ed8219ace34ea7297a06fb5c492f57356bba9dd3d4f25cb1151d",
+      "research_versions/robustness_v3/__init__.py": "10abfd4e0be3a5541c85242c83c65775d83ff0d8eeeecb9322b30368315ca096",
+      "research_versions/robustness_v3/controlled_trees.py": "8adcbda3e691b60a71d3534f4feb9693c4af620358de4a660d8e9a1d6b85f9e9",
+      "research_versions/robustness_v3/maxrm.py": "dcfec04d94170f4c717cc2a2d143bdb70b9d80c3db365e9af7965bed09da9dd4",
+      "research_versions/robustness_v3/preprocessing.py": "bc0a54bf23af5de96c3849f96b17e8da1dac0562e3584605ac0af1eac49d15ef",
+      "research_versions/robustness_v3/tuning.py": "75401aa795cf54f00bab179c69f24e383a0fa679932dfefdfd6d1230096033ac"
+    }
+  },
+  "sha256": "3e36e8c26a5492bbe41638130be50d4fb3b76611e76ffa55a644c189f7bb149a"
+}

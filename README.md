@@ -2,6 +2,8 @@
 
 НИР «Методы обучения ансамблей деревьев решений, устойчивых к сдвигу распределения табличных данных».
 
+**Итоговый материал:** [единое научное обобщение v1/v2](reports/closeout/research_synthesis.md), [PDF](reports/closeout/research_synthesis.pdf), [HTML с таблицами](reports/closeout/index.html), [реестр допустимых и недопустимых утверждений](reports/closeout/claims_registry.json), [готовность НИР](reports/closeout/readiness.json). Заключительный аудит дефектов и source-only пилот завершены; новые target-оценки не проводились. Исправления изолированы в [research_versions/robustness_v3](research_versions/robustness_v3/README.md), исходные v1/v2 сохранены.
+
 Исследуем существующие RF и GBDT в классификации и регрессии при строгой multi-source, source-only Domain Generalization. Собственный новый алгоритм в текущую НИР не входит. Ни один метод заранее не считается лучше обычной модели.
 
 ## Где что хранится
