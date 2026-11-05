@@ -12,7 +12,7 @@
 
 Coordinator последовательно выполняет source search и selected-source replays, публикует selections, обучает final source models, фиксирует и публикует final protocol, затем открывает новые targets, проверяет результаты и строит отчёт. Ошибка любого этапа останавливает продолжение; scientific runtime и параметры не редактируются во время выполнения. Target-stage interruption требует forensic проверки, автоматического retry нет.
 
-Прогресс: `runs/tuned_v4/coordinator.json` — текущий этап; `runs/tuned_v4/progress.json` — законченные задания внутри этапа. Логи и готовые материалы: `reports/tuned_v4/`. Промежуточные source scores не являются target результатами. Код coordinator и журнал публикаций доступны отдельно; работа вычислительного процесса не требует постоянных обращений к языковой модели.
+Прогресс: [локальная страница состояния](../../reports/tuned_v4/status.html) обновляется автоматически без обращений к модели; `runs/tuned_v4/coordinator.json` — текущий этап; `runs/tuned_v4/progress.json` — законченные задания внутри этапа. Логи и готовые материалы: `reports/tuned_v4/`. Промежуточные source scores не являются target результатами. Код coordinator и журнал публикаций доступны отдельно; работа вычислительного процесса не требует постоянных обращений к языковой модели.
 
 Итоговые файлы после завершения: `research_report.md/.pdf`, `index.html`, `method_cards.md`, `hypothesis_tests.csv`, `source_selection.csv`, `target_metrics.csv`, `final_integrity.json`, `evidence_manifest.json`. PDF проходит автоматический render/bounds check; contact sheet дополнительно требует визуальной проверки. Сырые данные, модели и predictions хранятся локально и исключены из Git.
 
