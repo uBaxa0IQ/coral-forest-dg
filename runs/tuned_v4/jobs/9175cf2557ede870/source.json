@@ -1,0 +1,107 @@
+{
+  "spec": {
+    "id": "regression_heteroscedastic",
+    "kind": "synthetic",
+    "dataset": "synthetic",
+    "task": "regression",
+    "scenario": "heteroscedastic",
+    "k": 8,
+    "n": 16384,
+    "imbalance": 1.0,
+    "replica": 5003,
+    "model_seed": 11,
+    "data_replica": 3,
+    "job_id": "9175cf2557ede870"
+  },
+  "source_frame_hash": "58743a53debfeb0f72499adef7d292f8b3f5d2929f55a4ddbc5ed6412b26d742",
+  "source_rows": 16384,
+  "source_variance": 3.6979029737087052,
+  "source_row_ids_sha256": "d7c8454962427e49e7df5beb0a7c6d0669702228fd3267c1b2e66ca209dd25f8",
+  "transformed_source_sha256": "a36a51cff744824bda3b82cfcfa30468abecf099fa7fd58c1202dde25bfb4ea5",
+  "strong_baseline": "extra_trees",
+  "models_sha256": "a903d18ddfb9862c9372f1c01be8608bbdb9717cae2d409408d5c398345d532e",
+  "models": [
+    "rf:tuned",
+    "rf:reference",
+    "extra_trees:tuned",
+    "extra_trees:reference",
+    "hist_gbdt:tuned",
+    "hist_gbdt:reference",
+    "irf:tuned",
+    "irf:reference",
+    "irf:control",
+    "anchor:tuned",
+    "anchor:reference",
+    "anchor:control",
+    "maxrm:tuned",
+    "maxrm:reference",
+    "maxrm:control",
+    "era:tuned",
+    "era:reference",
+    "era:control",
+    "directional_era:tuned",
+    "directional_era:reference",
+    "directional_era:control"
+  ],
+  "failed_methods": {},
+  "selected_parameters": {
+    "rf": {
+      "n_estimators": 512,
+      "max_depth": 8,
+      "min_samples_leaf": 5,
+      "max_features": 0.5
+    },
+    "extra_trees": {
+      "n_estimators": 256,
+      "max_depth": null,
+      "min_samples_leaf": 24,
+      "max_features": 1.0
+    },
+    "hist_gbdt": {
+      "max_iter": 200,
+      "max_leaf_nodes": 15,
+      "min_samples_leaf": 24,
+      "learning_rate": 0.05,
+      "l2_regularization": 1.0
+    },
+    "irf": {
+      "n_estimators": 64,
+      "max_depth": 6,
+      "min_samples_leaf": 16,
+      "max_thresholds": 16,
+      "penalty": 0.05
+    },
+    "anchor": {
+      "gamma": 1.0,
+      "num_boost_round": 100,
+      "learning_rate": 0.1,
+      "num_leaves": 8,
+      "min_data_in_leaf": 12
+    },
+    "maxrm": {
+      "n_estimators": 64,
+      "max_depth": 6,
+      "min_samples_leaf": 48,
+      "robust": false
+    },
+    "era": {
+      "strength": 0.1,
+      "max_iter": 80,
+      "max_leaf_nodes": 8,
+      "max_bins": 32,
+      "min_samples_leaf": 12,
+      "learning_rate": 0.1
+    },
+    "directional_era": {
+      "strength": 0.1,
+      "max_iter": 160,
+      "max_leaf_nodes": 8,
+      "max_bins": 64,
+      "min_samples_leaf": 24,
+      "learning_rate": 0.1
+    }
+  },
+  "source_seconds": 275.2029999999795,
+  "source_completed_at": "2026-11-06T01:37:16.386842+00:00",
+  "target_read": false
+}

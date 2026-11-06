@@ -1,0 +1,101 @@
+{
+  "spec": {
+    "id": "classification_iid",
+    "kind": "synthetic",
+    "dataset": "synthetic",
+    "task": "classification",
+    "scenario": "iid",
+    "k": 8,
+    "n": 16384,
+    "imbalance": 1.0,
+    "replica": 5006,
+    "model_seed": 11,
+    "data_replica": 6,
+    "job_id": "cc88a2e9031be68c"
+  },
+  "source_frame_hash": "00016ad2827fff7240ebad19fcf2aa706df787d87126d5abd250edaa3f6fac79",
+  "source_rows": 16384,
+  "source_variance": 0.24999892339110374,
+  "source_row_ids_sha256": "d7c8454962427e49e7df5beb0a7c6d0669702228fd3267c1b2e66ca209dd25f8",
+  "transformed_source_sha256": "6645e4866090f46c085dcc4d76a2763e70a1fe67f20784934b2f5de84cc8b759",
+  "strong_baseline": "extra_trees",
+  "models_sha256": "4390e015092355c1cd7996e5c6b8497c8a5abe7c7d7e1194d328348415955de5",
+  "models": [
+    "rf:tuned",
+    "rf:reference",
+    "extra_trees:tuned",
+    "extra_trees:reference",
+    "hist_gbdt:tuned",
+    "hist_gbdt:reference",
+    "irf:tuned",
+    "irf:reference",
+    "irf:control",
+    "anchor:tuned",
+    "anchor:reference",
+    "anchor:control",
+    "crf:tuned",
+    "crf:reference",
+    "crf:control",
+    "meta:tuned",
+    "meta:reference",
+    "meta:control"
+  ],
+  "failed_methods": {},
+  "selected_parameters": {
+    "rf": {
+      "n_estimators": 256,
+      "max_depth": 8,
+      "min_samples_leaf": 12,
+      "max_features": 0.5
+    },
+    "extra_trees": {
+      "n_estimators": 256,
+      "max_depth": null,
+      "min_samples_leaf": 24,
+      "max_features": 1.0
+    },
+    "hist_gbdt": {
+      "max_iter": 400,
+      "max_leaf_nodes": 15,
+      "min_samples_leaf": 5,
+      "learning_rate": 0.05,
+      "l2_regularization": 0.0
+    },
+    "irf": {
+      "n_estimators": 128,
+      "max_depth": 8,
+      "min_samples_leaf": 16,
+      "max_thresholds": 16,
+      "penalty": 0.001
+    },
+    "anchor": {
+      "gamma": 16.0,
+      "num_boost_round": 200,
+      "learning_rate": 0.05,
+      "num_leaves": 8,
+      "min_data_in_leaf": 12
+    },
+    "crf": {
+      "n_estimators": 128,
+      "max_depth": 8,
+      "min_samples_leaf": 16,
+      "max_thresholds": 32,
+      "lambda1": 0.5,
+      "lambda2": 0.5
+    },
+    "meta": {
+      "iterations": 5,
+      "trees_per_forest": 16,
+      "max_depth": 6,
+      "sampling_ratio": 1.0,
+      "alpha": -0.1,
+      "beta": 2.0,
+      "use_mmd": true,
+      "use_accuracy": true,
+      "feature_masking": false
+    }
+  },
+  "source_seconds": 330.1720000000205,
+  "source_completed_at": "2026-11-05T22:12:03.811707+00:00",
+  "target_read": false
+}
