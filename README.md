@@ -2,7 +2,7 @@
 
 НИР «Методы обучения ансамблей деревьев решений, устойчивых к сдвигу распределения табличных данных».
 
-**Новый этап v4:** [углублённая настройка и свежий тест](docs/tuned_v4/preregistration.md), [живой прогресс](reports/tuned_v4/status.html), [порядок исполнения](research_versions/tuned_v4/README.md). Source-only HPO выполняется отдельно от новых targets; исходные отчёты ниже описывают завершённые v1/v2, а не будущие результаты v4.
+**V4 завершена:** [основные научные выводы](reports/tuned_v4/results_brief.md), [отчёт PDF](reports/tuned_v4/research_report.pdf), [HTML и таблицы](reports/tuned_v4/index.html), [24 предзаданных теста](reports/tuned_v4/hypothesis_tests.csv), [аудит](reports/tuned_v4/final_integrity.json). Настройка помогла ряду моделей; отдельный положительный mechanism gain после Holm получен для Meta classification и Era regression. IRF/CRF classification дали отрицательный mechanism contrast. [Пререгистрация](docs/tuned_v4/preregistration.md), [статус](reports/tuned_v4/status.html).
 
 **Итоговый материал:** [единое научное обобщение v1/v2](reports/closeout/research_synthesis.md), [PDF](reports/closeout/research_synthesis.pdf), [HTML с таблицами](reports/closeout/index.html), [реестр допустимых и недопустимых утверждений](reports/closeout/claims_registry.json), [готовность НИР](reports/closeout/readiness.json). Заключительный аудит дефектов и source-only пилот завершены; новые target-оценки не проводились. Исправления изолированы в [research_versions/robustness_v3](research_versions/robustness_v3/README.md), исходные v1/v2 сохранены.
 
