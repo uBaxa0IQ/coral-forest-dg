@@ -1,0 +1,36 @@
+\documentclass{bmstu}
+
+\usepackage{tabularx}
+\usepackage{graphicx}
+\graphicspath{{images/}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcommand{\includelistingpretty}[3]{%
+  \begin{listing}[H]%
+  \caption{#3}%
+  \inputminted{#2}{inc/lst/#1}%
+  \end{listing}%
+}
+\usetikzlibrary{positioning,arrows.meta}
+\usepackage{amsmath}
+\numberwithin{equation}{chapter}
+
+\bibliography{biblio}
+
+\begin{document}
+
+    \setcounter{page}{3}
+
+    \include{02-essay}
+
+    \maketableofcontents
+
+    \include{10-introduction}
+    \include{20-analysis}
+    \include{30-conclusion}
+
+    \makebibliography
+
+    \include{40-appendix}
+
+\end{document}
